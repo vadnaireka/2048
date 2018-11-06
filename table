@@ -1,0 +1,33 @@
+"""list = [[0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]]
+for line in range(len(list)):
+    print(list[line])
+print(list[1][1]) """
+twotop = (' ' '\u250f' '\u2501' '\u2501' '\u2501' '\u2513' '')
+twomid = (' ''\u250f''\u2501''\u2501''\u2501''\u251b''')
+space = '      '
+row10_1 = twotop
+row10_2 = twomid
+row10_3 = '      '
+row11_1 = '      '
+row11_2 = '      '
+row11_3 = '      '
+print('\u250f', '\u2501' * 6, '\u2533', '\u2501' * 6, '\u2533', '\u2501' * 6, '\u2533', '\u2501' * 6, '\u2513')
+print('\u2503', row10_1, '\u2503', row11_1, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', row10_2, '\u2503', row11_2, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', row10_3, '\u2503', row11_3, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2523', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u252b')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2523', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u252b')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2523', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u254b', '\u2501' * 6, '\u252b')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2503', space, '\u2503', space, '\u2503', space, '\u2503', space, '\u2503')
+print('\u2517', '\u2501' * 6, '\u253b', '\u2501' * 6, '\u253b', '\u2501' * 6, '\u253b', '\u2501' * 6, '\u251b')
