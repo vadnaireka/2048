@@ -1,0 +1,24 @@
+b = [[0, 0, 0, 2],[2, 0, 0, 2],[4, 0, 0, 2],[4, 0, 0, 2]]
+
+i = 0
+j = 0
+
+def moveDown():
+    for j in range(0,4):
+        for i in range(4,0,-1):
+            try:
+                if b[i][j] == 0:
+                    b[i][j] = b[i-1][j]           
+                    b[i-1][j] = b[i-2][j]
+                    b[i - 2][j] = b[i - 3][j]
+                    b[i-3][j] = 0
+                elif b[i][j] == b[i - 1][j]:
+                    b[i][j] = b[i][j] + b[i - 1][j]
+                    b[i-1][j] = b[i-2][j]
+                    b[i - 2][j] = b[i - 3][j]
+                    b[i-3][j] = 0
+            except:
+                continue
+print(b)
+moveDown()
+print(b)
