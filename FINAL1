@@ -1,0 +1,1123 @@
+import os
+import sys
+import random
+
+
+FINAL_POINT = 16
+
+def moveDown():
+    for j in range(0,4):
+        for i in range(3, 0, -1):
+            if b[i][j] == 0:
+                for z in range(1, i + 1):
+                    if b[i][j] == 0 and b[i - z][j] != 0:
+                        b[i][j] = b[i - z][j]
+                        if i - (z + 1) > -1:
+                            b[i - z][j] = b[i - (z + 1)][j]
+                            if i - (z + 2) > -1:
+                                b[i - (z + 1)][j] = b[i - (z + 2)][j]
+                                b[i - (z + 2)][j] = 0
+                            else:
+                                b[i - (z + 1)][j] = 0
+                        else:
+                            b[i - z][j] = 0
+                    else:
+                        pass
+            if i > 0:
+                for z in range(1, i + 1):
+                    if b[i][j] == b[i - z][j]:
+                        b[i][j] = b[i][j] + b[i - z][j]
+                        if i - (z + 1) > -1:
+                            b[i - z][j] = b[i - (z + 1)][j]
+                            if i - (z + 2) > -1:
+                                b[i - (z + 1)][j] = b[i - (z + 2)][j]
+                                b[i - (z + 2)][j] = 0
+                            else:
+                                b[i - (z + 1)][j] = 0
+                        else:
+                            b[i - z][j] = 0
+                    else:
+                        pass        
+
+def moveUp():
+    for j in range(0,4):
+        for i in range(0,4):
+            if b[i][j] == 0:
+                for z in range(1, 3 - i):
+                    try:
+                        if b[i][j] == 0 and b[i + z][j] != 0:
+                            b[i][j] = b[i + z][j]
+                            b[i + z][j] = 0
+                            b[i + z][j] = b[i + (z + 1)][j]
+                            b[i + (z + 1)][j] =0
+                            b[i + (z + 1)][j] = b[i + (z + 2)][j]
+                            b[i + (z + 2)][j] = 0
+                    except IndexError:
+                        pass
+            if i <3:
+                for z in range(1, 3 - i):
+                    if b[i][j] == b[i + z][j]:
+                        b[i][j] = b[i][j] + b[i + z][j]
+                        if i + (z + 1) <4:
+                            b[i + z][j] = b[i + (z + 1)][j]
+                            if i + (z + 2) <4:
+                                b[i + (z + 1)][j] = b[i + (z + 2)][j]
+                                b[i + (z + 2)][j] = 0
+                            else:
+                                b[i + (z + 1)][j] = 0
+                        else:
+                            b[i + z][j] = 0
+                    else:
+                        pass                       
+            else:
+                pass
+
+def moveLeft():
+    for i in range(0,4):
+        for j in range(0,4):
+            if b[i][j] == 0:
+                for z in range(1, 4):
+                    try:
+                        if b[i][j] == 0 and b[i][j+z] != 0:
+                            b[i][j] = b[i][j+z]
+                            b[i][j+z] = 0
+                            b[i][j+z] = b[i][j +(z+1)]
+                            b[i][j +(z+1)] =0
+                            b[i][j +(z+1)] = b[i][j +(z+2)]
+                            b[i][j +(z+2)] = 0
+                    except IndexError:
+                        pass
+            if j <3:
+                for z in range(1, 3 - j):
+                    if b[i][j] == b[i][j + z]:
+                        b[i][j] = b[i][j] + b[i][j+ z]
+                        if j + (z + 1) <4:
+                            b[i][j + z] = b[i][j + (z + 1)]
+                            if j + (z + 2) <4:
+                                b[i][j + (z + 1)] = b[i][j + (z + 2)]
+                                b[i][j + (z + 2)] = 0
+                            else:
+                                b[i][j + (z + 1)] = 0
+                        else:
+                            b[i][j + z] = 0
+                    else:
+                        pass                       
+            else:
+                pass            
+
+def moveRight():
+    for i in range(0,4):
+        for j in range(3, 0, -1):
+            if b[i][j] == 0:
+                for z in range(1, j + 1):
+                    if b[i][j] == 0 and b[i][j-z] != 0:
+                        b[i][j] = b[i][j-z]
+                        if j - (z + 1) > -1:
+                            b[i][j - z] = b[i][j - (z + 1)]
+                            if j - (z + 2) > -1:
+                                b[i][j - (z + 1)] = b[i ][j- (z + 2)]
+                                b[i][j - (z + 2)] = 0
+                            else:
+                                b[i][j - (z + 1)] = 0
+                        else:
+                            b[i][j - z] = 0
+                    else:
+                        pass
+            if j > 0:
+                for z in range(1, j + 1):
+                    if b[i][j] == b[i][j - z]:
+                        b[i][j] = b[i][j] + b[i][j - z]
+                        if j - (z + 1) > -1:
+                            b[i][j- z] = b[i][j - (z + 1)]
+                            if j - (z + 2) > -1:
+                                b[i][j - (z + 1)] = b[i][j - (z + 2)]
+                                b[i][j - (z + 2)] = 0
+                            else:
+                                b[i][j - (z + 1)] = 0
+                        else:
+                            b[i][j - z] = 0
+                    else:
+                        pass
+            
+
+def setNewCell():
+    x = True
+    while x:
+        new = [2,4,2,2]
+        i = random.randint(0,3)
+        j = random.randint(0,3)
+        if b[i][j] == 0:
+            b[i][j] = random.choice(new)
+            x = False   
+
+"""def boardIsFull():
+    c = b[0].count(0) + b[1].count(0) + b[2].count(0) + b[3].count(0)
+    if c > 0:
+        print(c)
+    move=0
+    for i in range(0,4):
+        for j in range(0,4):
+            try:
+                if b[i][j] == b[i-1][j] or b[i][j] == b[i+1][j] or b[i][j] == b[i][j-1] or b[i][j] == b[i][j+1]:
+                    move += 1
+            except IndexError:
+                pass
+    if move == 0:
+        break  """  
+
+t_2048_top = ('\x1b[1;31;40m''\u250f''\u2513'   '\u250f''\u2513'  '\u257b'' '   '\u250f''\u2513''\x1b[0m')
+t_2048_mid = ('\x1b[1;31;40m''\u250f''\u251b'   '\u2503''\u2503'  '\u2517''\u252b' '\u2523''\u252b''\x1b[0m')
+t_2048_down = ('\x1b[1;31;40m''\u2517''\u251b'  '\u2517' '\u251b' ' ' '\u2579'     '\u2517' '\u251b''\x1b[0m')
+
+t_1024_top = ('\x1b[1;34;41m'' ''\u257b'  '\u250f''\u2513'  '\u250f''\u2513'  '\u257b'' ''\x1b[0m')
+t_1024_mid = ('\x1b[1;34;41m'' ''\u2503'  '\u2503''\u2503'  '\u250f''\u251b'  '\u2517''\u252b''\x1b[0m')
+t_1024_down = ('\x1b[1;34;41m'' ' '\u2579' '\u2517' '\u251b' '\u2517' '\u251b' ' ' '\u2579''\x1b[0m')
+
+t_512_top = ('\x1b[1;33;42m''  ''\u250f' '\u2578' '\u257b''\u250f''\u2513'' ''\x1b[0m')
+t_512_mid = ('\x1b[1;33;42m''  ''\u2517''\u2513''\u2503''\u250f''\u251b'' ''\x1b[0m')
+t_512_down = ('\x1b[1;33;42m''  ' '\u2517' '\u251b' '\u2579' '\u2517' '\u251b' ' ''\x1b[0m')
+
+t_256_top = ('\x1b[1;32;43m'' ' '\u250f''\u2513''\u250f' '\u2578''\u250f' '\u2578'' ''\x1b[0m')
+t_256_mid = ('\x1b[1;32;43m'' ' '\u250f''\u251b''\u2517''\u2513''\u2523''\u2513'' ''\x1b[0m')
+t_256_down = ('\x1b[1;32;43m'' ' '\u2517' '\u251b' '\u2517' '\u251b' '\u2517' '\u251b' ' ''\x1b[0m')
+
+t_128_top = ('\x1b[1;37;46m'' ''\u257b''\u250f''\u2501''\u2513''\u250f''\u2501''\u2513''' '\x1b[0m')
+t_128_mid = ('\x1b[1;37;46m'' ''\u2503''\u250f''\u2501''\u251b''\u2523''\u2501''\u252b''' '\x1b[0m')
+t_128_down = ('\x1b[1;37;46m'' ' '\u2579' '\u2517' '\u2501''\u251b' '\u2517' '\u2501''\u251b' '' '\x1b[0m')
+
+t_64_top = ('\x1b[1;30;42m'' ''\u250f''\u2501' '\u2578''\u257b''   ''\x1b[0m')
+t_64_mid = ('\x1b[1;30;42m'' ''\u2523''\u2501''\u2513''\u2517''\u2501''\u252b'' ''\x1b[0m')
+t_64_down = ('\x1b[1;30;42m'' ''\u2517''\u2501' '\u251b''  ' '\u2579'' ''\x1b[0m')
+
+t_32_top = ('\x1b[1;33;44m''  ''\u2501''\u2513''\u250f''\u2501''\u2513'' ''\x1b[0m')
+t_32_mid = ('\x1b[1;33;44m''  ''\u257a''\u252b''\u250f''\u2501''\u251b' ' ''\x1b[0m')
+t_32_down = ('\x1b[1;33;44m''  ' '\u2501' '\u251b' '\u2517' '\u2501' '\u251b' ' ''\x1b[0m')
+
+t_16_top = ('\x1b[1;32;41m''  ''\u257b''\u250f''\u2501''\u2578''  ''\x1b[0m')
+t_16_mid = ('\x1b[1;32;41m''  ''\u2503''\u2523''\u2501''\u2513''  ''\x1b[0m')
+t_16_down = ('\x1b[1;32;41m''  ' '\u2579' '\u2517' '\u2501' '\u251b' '  ''\x1b[0m')
+
+t_8_top = ('\x1b[1;33;45m''   ''\u250f''\u2501''\u2513''  ''\x1b[0m')
+t_8_mid = ('\x1b[1;33;45m''   ''\u2523''\u2501''\u252b''  ''\x1b[0m')
+t_8_down = ('\x1b[1;33;45m''   ' '\u2517' '\u2501' '\u251b' '  ''\x1b[0m')
+
+t_4_top = ('\x1b[1;30;46m' '  ' '\u257b''     ''\x1b[0m')
+t_4_mid = ('\x1b[1;30;46m''  ''\u2517''\u2501''\u2501''\u252b''  ''\x1b[0m')
+t_4_down = ('\x1b[1;30;46m''     ' '\u2579 '' ''\x1b[0m')
+
+t_2_top = ('\x1b[0;32;47m''  ' '\u250f'    '\u2501' '\u2501' '\u2513' '  ''\x1b[0m')
+t_2_mid = ('\x1b[0;32;47m''  ''\u250f'    '\u2501'  '\u2501' '\u251b' '  ''\x1b[0m')
+t_2_down = ('\x1b[0;32;47m''  ' '\u2517'   '\u2501'  '\u2501' '\u251b' '  ''\x1b[0m')
+
+space = '        '
+cell00_1 = space
+cell00_2 = space
+cell00_3 = space
+cell01_1 = space
+cell01_2 = space
+cell01_3 = space
+cell02_1 = space
+cell02_2 = space
+cell02_3 = space
+cell03_1 = space
+cell03_2 = space
+cell03_3 = space
+
+cell10_1 = space
+cell10_2 = space
+cell10_3 = space
+cell11_1 = space
+cell11_2 = space
+cell11_3 = space
+cell12_1 = space
+cell12_2 = space
+cell12_3 = space
+cell13_1 = space
+cell13_2 = space
+cell13_3 = space
+
+cell20_1 = space
+cell20_2 = space
+cell20_3 = space
+cell21_1 = space
+cell21_2 = space
+cell21_3 = space
+cell22_1 = space
+cell22_2 = space
+cell22_3 = space
+cell23_1 = space
+cell23_2 = space
+cell23_3 = space
+
+cell30_1 = space
+cell30_2 = space
+cell30_3 = space
+cell31_1 = space
+cell31_2 = space
+cell31_3 = space
+cell32_1 = space
+cell32_2 = space
+cell32_3 = space
+cell33_1 = space
+cell33_2 = space
+cell33_3 = space
+
+def logo():
+    print("       .d888b.  .d88b.    j88D  .d888b. ")
+    print("       VP  `8D .8P  88.  j8~88  88   8D ")
+    print("          odD' 88  d'88 j8' 88  `VoooY' ")
+    print("        .88'   88 d' 88 V88888D .d~~~b. ")
+    print("       j88.    `88  d8'     88  88   8D ")
+    print("       888888D  `Y88P'      VP  `Y888P' ")
+    print('\n')
+
+def table():
+    if b[0][0] == 2:
+        cell00_1 = t_2_top
+        cell00_2 = t_2_mid
+        cell00_3 = t_2_down
+    elif b[0][0] == 4:
+        cell00_1 = t_4_top
+        cell00_2 = t_4_mid
+        cell00_3 = t_4_down
+    elif b[0][0] == 8:
+        cell00_1 = t_8_top
+        cell00_2 = t_8_mid
+        cell00_3 = t_8_down
+    elif b[0][0] == 16:
+        cell00_1 = t_16_top
+        cell00_2 = t_16_mid
+        cell00_3 = t_16_down
+    elif b[0][0] == 32:
+        cell00_1 = t_32_top
+        cell00_2 = t_32_mid
+        cell00_3 = t_32_down
+    elif b[0][0] == 64:
+        cell00_1 = t_64_top
+        cell00_2 = t_64_mid
+        cell00_3 = t_64_down
+    elif b[0][0] == 128:
+        cell00_1 = t_128_top
+        cell00_2 = t_128_mid
+        cell00_3 = t_128_down
+    elif b[0][0] == 256:
+        cell00_1 = t_256_top
+        cell00_2 = t_256_mid
+        cell00_3 = t_256_down
+    elif b[0][0] == 512:
+        cell00_1 = t_512_top
+        cell00_2 = t_512_mid
+        cell00_3 = t_512_down
+    elif b[0][0] == 1024:
+        cell00_1 = t_1024_top
+        cell00_2 = t_1024_mid
+        cell00_3 = t_1024_down
+    elif b[0][0] == 2048:
+        cell00_1 = t_2048_top
+        cell00_2 = t_2048_mid
+        cell00_3 = t_2048_down
+    else:
+        cell00_1 = space
+        cell00_2 = space
+        cell00_3 = space
+
+    if b[0][1] == 2:
+        cell01_1 = t_2_top
+        cell01_2 = t_2_mid
+        cell01_3 = t_2_down
+    elif b[0][1] == 4:
+        cell01_1 = t_4_top
+        cell01_2 = t_4_mid
+        cell01_3 = t_4_down
+    elif b[0][1] == 8:
+        cell01_1 = t_8_top
+        cell01_2 = t_8_mid
+        cell01_3 = t_8_down
+    elif b[0][1] == 16:
+        cell01_1 = t_16_top
+        cell01_2 = t_16_mid
+        cell01_3 = t_16_down
+    elif b[0][1] == 32:
+        cell01_1 = t_32_top
+        cell01_2 = t_32_mid
+        cell01_3 = t_32_down
+    elif b[0][1] == 64:
+        cell01_1 = t_64_top
+        cell01_2 = t_64_mid
+        cell01_3 = t_64_down
+    elif b[0][1] == 128:
+        cell01_1 = t_128_top
+        cell01_2 = t_128_mid
+        cell01_3 = t_128_down
+    elif b[0][1] == 256:
+        cell01_1 = t_256_top
+        cell01_2 = t_256_mid
+        cell01_3 = t_256_down
+    elif b[0][1] == 512:
+        cell01_1 = t_512_top
+        cell01_2 = t_512_mid
+        cell01_3 = t_512_down
+    elif b[0][1] == 1024:
+        cell01_1 = t_1024_top
+        cell01_2 = t_1024_mid
+        cell01_3 = t_1024_down
+    elif b[0][1] == 2048:
+        cell01_1 = t_2048_top
+        cell01_2 = t_2048_mid
+        cell01_3 = t_2048_down
+    else:
+        cell01_1 = space
+        cell01_2 = space
+        cell01_3 = space
+
+    if b[0][2] == 2:
+        cell02_1 = t_2_top
+        cell02_2 = t_2_mid
+        cell02_3 = t_2_down
+    elif b[0][2] == 4:
+        cell02_1 = t_4_top
+        cell02_2 = t_4_mid
+        cell02_3 = t_4_down
+    elif b[0][2] == 8:
+        cell02_1 = t_8_top
+        cell02_2 = t_8_mid
+        cell02_3 = t_8_down
+    elif b[0][2] == 16:
+        cell02_1 = t_16_top
+        cell02_2 = t_16_mid
+        cell02_3 = t_16_down
+    elif b[0][2] == 32:
+        cell02_1 = t_32_top
+        cell02_2 = t_32_mid
+        cell02_3 = t_32_down
+    elif b[0][2] == 64:
+        cell02_1 = t_64_top
+        cell02_2 = t_64_mid
+        cell02_3 = t_64_down
+    elif b[0][2] == 128:
+        cell02_1 = t_128_top
+        cell02_2 = t_128_mid
+        cell02_3 = t_128_down
+    elif b[0][2] == 256:
+        cell02_1 = t_256_top
+        cell02_2 = t_256_mid
+        cell02_3 = t_256_down
+    elif b[0][2] == 512:
+        cell02_1 = t_512_top
+        cell02_2 = t_512_mid
+        cell02_3 = t_512_down
+    elif b[0][2] == 1024:
+        cell02_1 = t_1024_top
+        cell02_2 = t_1024_mid
+        cell02_3 = t_1024_down
+    elif b[0][2] == 2048:
+        cell02_1 = t_2048_top
+        cell02_2 = t_2048_mid
+        cell02_3 = t_2048_down
+    else:
+        cell02_1 = space
+        cell02_2 = space
+        cell02_3 = space
+
+    if b[0][3] == 2:
+        cell03_1 = t_2_top
+        cell03_2 = t_2_mid
+        cell03_3 = t_2_down
+    elif b[0][3] == 4:
+        cell03_1 = t_4_top
+        cell03_2 = t_4_mid
+        cell03_3 = t_4_down
+    elif b[0][3] == 8:
+        cell03_1 = t_8_top
+        cell03_2 = t_8_mid
+        cell03_3 = t_8_down
+    elif b[0][3] == 16:
+        cell03_1 = t_16_top
+        cell03_2 = t_16_mid
+        cell03_3 = t_16_down
+    elif b[0][3] == 32:
+        cell03_1 = t_32_top
+        cell03_2 = t_32_mid
+        cell03_3 = t_32_down
+    elif b[0][3] == 64:
+        cell03_1 = t_64_top
+        cell03_2 = t_64_mid
+        cell03_3 = t_64_down
+    elif b[0][3] == 128:
+        cell03_1 = t_128_top
+        cell03_2 = t_128_mid
+        cell03_3 = t_128_down
+    elif b[0][3] == 256:
+        cell03_1 = t_256_top
+        cell03_2 = t_256_mid
+        cell03_3 = t_256_down
+    elif b[0][3] == 512:
+        cell03_1 = t_512_top
+        cell03_2 = t_512_mid
+        cell03_3 = t_512_down
+    elif b[0][3] == 1024:
+        cell03_1 = t_1024_top
+        cell03_2 = t_1024_mid
+        cell03_3 = t_1024_down
+    elif b[0][3] == 2048:
+        cell03_1 = t_2048_top
+        cell03_2 = t_2048_mid
+        cell03_3 = t_2048_down
+    else:
+        cell03_1 = space
+        cell03_2 = space
+        cell03_3 = space
+
+    if b[1][0] == 2:
+        cell10_1 = t_2_top
+        cell10_2 = t_2_mid
+        cell10_3 = t_2_down
+    elif b[1][0] == 4:
+        cell10_1 = t_4_top
+        cell10_2 = t_4_mid
+        cell10_3 = t_4_down
+    elif b[1][0] == 8:
+        cell10_1 = t_8_top
+        cell10_2 = t_8_mid
+        cell10_3 = t_8_down
+    elif b[1][0] == 16:
+        cell10_1 = t_16_top
+        cell10_2 = t_16_mid
+        cell10_3 = t_16_down
+    elif b[1][0] == 32:
+        cell10_1 = t_32_top
+        cell10_2 = t_32_mid
+        cell10_3 = t_32_down
+    elif b[1][0] == 64:
+        cell10_1 = t_64_top
+        cell10_2 = t_64_mid
+        cell10_3 = t_64_down
+    elif b[1][0] == 128:
+        cell10_1 = t_128_top
+        cell10_2 = t_128_mid
+        cell10_3 = t_128_down
+    elif b[1][0] == 256:
+        cell10_1 = t_256_top
+        cell10_2 = t_256_mid
+        cell10_3 = t_256_down
+    elif b[1][0] == 512:
+        cell10_1 = t_512_top
+        cell10_2 = t_512_mid
+        cell10_3 = t_512_down
+    elif b[1][0] == 1024:
+        cell10_1 = t_1024_top
+        cell10_2 = t_1024_mid
+        cell10_3 = t_1024_down
+    elif b[1][0] == 2048:
+        cell10_1 = t_2048_top
+        cell10_2 = t_2048_mid
+        cell10_3 = t_2048_down
+    else:
+        cell10_1 = space
+        cell10_2 = space
+        cell10_3 = space
+
+    if b[1][1] == 2:
+        cell11_1 = t_2_top
+        cell11_2 = t_2_mid
+        cell11_3 = t_2_down
+    elif b[1][1] == 4:
+        cell11_1 = t_4_top
+        cell11_2 = t_4_mid
+        cell11_3 = t_4_down
+    elif b[1][1] == 8:
+        cell11_1 = t_8_top
+        cell11_2 = t_8_mid
+        cell11_3 = t_8_down
+    elif b[1][1] == 16:
+        cell11_1 = t_16_top
+        cell11_2 = t_16_mid
+        cell11_3 = t_16_down
+    elif b[1][1] == 32:
+        cell11_1 = t_32_top
+        cell11_2 = t_32_mid
+        cell11_3 = t_32_down
+    elif b[1][1] == 64:
+        cell11_1 = t_64_top
+        cell11_2 = t_64_mid
+        cell11_3 = t_64_down
+    elif b[1][1] == 128:
+        cell11_1 = t_128_top
+        cell11_2 = t_128_mid
+        cell11_3 = t_128_down
+    elif b[1][1] == 256:
+        cell11_1 = t_256_top
+        cell11_2 = t_256_mid
+        cell11_3 = t_256_down
+    elif b[1][1] == 512:
+        cell11_1 = t_512_top
+        cell11_2 = t_512_mid
+        cell11_3 = t_512_down
+    elif b[1][1] == 1024:
+        cell11_1 = t_1024_top
+        cell11_2 = t_1024_mid
+        cell11_3 = t_1024_down
+    elif b[1][1] == 2048:
+        cell11_1 = t_2048_top
+        cell11_2 = t_2048_mid
+        cell11_3 = t_2048_down
+    else:
+        cell11_1 = space
+        cell11_2 = space
+        cell11_3 = space
+
+    if b[1][2] == 2:
+        cell12_1 = t_2_top
+        cell12_2 = t_2_mid
+        cell12_3 = t_2_down
+    elif b[1][2] == 4:
+        cell12_1 = t_4_top
+        cell12_2 = t_4_mid
+        cell12_3 = t_4_down
+    elif b[1][2] == 8:
+        cell12_1 = t_8_top
+        cell12_2 = t_8_mid
+        cell12_3 = t_8_down
+    elif b[1][2] == 16:
+        cell12_1 = t_16_top
+        cell12_2 = t_16_mid
+        cell12_3 = t_16_down
+    elif b[1][2] == 32:
+        cell12_1 = t_32_top
+        cell12_2 = t_32_mid
+        cell12_3 = t_32_down
+    elif b[1][2] == 64:
+        cell12_1 = t_64_top
+        cell12_2 = t_64_mid
+        cell12_3 = t_64_down
+    elif b[1][2] == 128:
+        cell12_1 = t_128_top
+        cell12_2 = t_128_mid
+        cell12_3 = t_128_down
+    elif b[1][2] == 256:
+        cell12_1 = t_256_top
+        cell12_2 = t_256_mid
+        cell12_3 = t_256_down
+    elif b[1][2] == 512:
+        cell12_1 = t_512_top
+        cell12_2 = t_512_mid
+        cell12_3 = t_512_down
+    elif b[1][2] == 1024:
+        cell12_1 = t_1024_top
+        cell12_2 = t_1024_mid
+        cell12_3 = t_1024_down
+    elif b[1][2] == 2048:
+        cell12_1 = t_2048_top
+        cell12_2 = t_2048_mid
+        cell12_3 = t_2048_down
+    else:
+        cell12_1 = space
+        cell12_2 = space
+        cell12_3 = space
+
+    if b[1][3] == 2:
+        cell13_1 = t_2_top
+        cell13_2 = t_2_mid
+        cell13_3 = t_2_down
+    elif b[1][3] == 4:
+        cell13_1 = t_4_top
+        cell13_2 = t_4_mid
+        cell13_3 = t_4_down
+    elif b[1][3] == 8:
+        cell13_1 = t_8_top
+        cell13_2 = t_8_mid
+        cell13_3 = t_8_down
+    elif b[1][3] == 16:
+        cell13_1 = t_16_top
+        cell13_2 = t_16_mid
+        cell13_3 = t_16_down
+    elif b[1][3] == 32:
+        cell13_1 = t_32_top
+        cell13_2 = t_32_mid
+        cell13_3 = t_32_down
+    elif b[1][3] == 64:
+        cell13_1 = t_64_top
+        cell13_2 = t_64_mid
+        cell13_3 = t_64_down
+    elif b[1][3] == 128:
+        cell13_1 = t_128_top
+        cell13_2 = t_128_mid
+        cell13_3 = t_128_down
+    elif b[1][3] == 256:
+        cell13_1 = t_256_top
+        cell13_2 = t_256_mid
+        cell13_3 = t_256_down
+    elif b[1][3] == 512:
+        cell13_1 = t_512_top
+        cell13_2 = t_512_mid
+        cell13_3 = t_512_down
+    elif b[1][3] == 1024:
+        cell13_1 = t_1024_top
+        cell13_2 = t_1024_mid
+        cell13_3 = t_1024_down
+    elif b[1][3] == 2048:
+        cell13_1 = t_2048_top
+        cell13_2 = t_2048_mid
+        cell13_3 = t_2048_down
+    else:
+        cell13_1 = space
+        cell13_2 = space
+        cell13_3 = space
+
+    if b[2][0] == 2:
+        cell20_1 = t_2_top
+        cell20_2 = t_2_mid
+        cell20_3 = t_2_down
+    elif b[2][0] == 4:
+        cell20_1 = t_4_top
+        cell20_2 = t_4_mid
+        cell20_3 = t_4_down
+    elif b[2][0] == 8:
+        cell20_1 = t_8_top
+        cell20_2 = t_8_mid
+        cell20_3 = t_8_down
+    elif b[2][0] == 16:
+        cell20_1 = t_16_top
+        cell20_2 = t_16_mid
+        cell20_3 = t_16_down
+    elif b[2][0] == 32:
+        cell20_1 = t_32_top
+        cell20_2 = t_32_mid
+        cell20_3 = t_32_down
+    elif b[2][0] == 64:
+        cell20_1 = t_64_top
+        cell20_2 = t_64_mid
+        cell20_3 = t_64_down
+    elif b[2][0] == 128:
+        cell20_1 = t_128_top
+        cell20_2 = t_128_mid
+        cell20_3 = t_128_down
+    elif b[2][0] == 256:
+        cell20_1 = t_256_top
+        cell20_2 = t_256_mid
+        cell20_3 = t_256_down
+    elif b[2][0] == 512:
+        cell20_1 = t_512_top
+        cell20_2 = t_512_mid
+        cell20_3 = t_512_down
+    elif b[2][0] == 1024:
+        cell20_1 = t_1024_top
+        cell20_2 = t_1024_mid
+        cell20_3 = t_1024_down
+    elif b[2][0] == 2048:
+        cell20_1 = t_2048_top
+        cell20_2 = t_2048_mid
+        cell20_3 = t_2048_down
+    else:
+        cell20_1 = space
+        cell20_2 = space
+        cell20_3 = space
+
+    if b[2][1] == 2:
+        cell21_1 = t_2_top
+        cell21_2 = t_2_mid
+        cell21_3 = t_2_down
+    elif b[2][1] == 4:
+        cell21_1 = t_4_top
+        cell21_2 = t_4_mid
+        cell21_3 = t_4_down
+    elif b[2][1] == 8:
+        cell21_1 = t_8_top
+        cell21_2 = t_8_mid
+        cell21_3 = t_8_down
+    elif b[2][1] == 16:
+        cell21_1 = t_16_top
+        cell21_2 = t_16_mid
+        cell21_3 = t_16_down
+    elif b[2][1] == 32:
+        cell21_1 = t_32_top
+        cell21_2 = t_32_mid
+        cell21_3 = t_32_down
+    elif b[2][1] == 64:
+        cell21_1 = t_64_top
+        cell21_2 = t_64_mid
+        cell21_3 = t_64_down
+    elif b[2][1] == 128:
+        cell21_1 = t_128_top
+        cell21_2 = t_128_mid
+        cell21_3 = t_128_down
+    elif b[2][1] == 256:
+        cell21_1 = t_256_top
+        cell21_2 = t_256_mid
+        cell21_3 = t_256_down
+    elif b[2][1] == 512:
+        cell21_1 = t_512_top
+        cell21_2 = t_512_mid
+        cell21_3 = t_512_down
+    elif b[2][1] == 1024:
+        cell21_1 = t_1024_top
+        cell21_2 = t_1024_mid
+        cell21_3 = t_1024_down
+    elif b[2][1] == 2048:
+        cell21_1 = t_2048_top
+        cell21_2 = t_2048_mid
+        cell21_3 = t_2048_down
+    else:
+        cell21_1 = space
+        cell21_2 = space
+        cell21_3 = space
+
+    if b[2][2] == 2:
+        cell22_1 = t_2_top
+        cell22_2 = t_2_mid
+        cell22_3 = t_2_down
+    elif b[2][2] == 4:
+        cell22_1 = t_4_top
+        cell22_2 = t_4_mid
+        cell22_3 = t_4_down
+    elif b[2][2] == 8:
+        cell22_1 = t_8_top
+        cell22_2 = t_8_mid
+        cell22_3 = t_8_down
+    elif b[2][2] == 16:
+        cell22_1 = t_16_top
+        cell22_2 = t_16_mid
+        cell22_3 = t_16_down
+    elif b[2][2] == 32:
+        cell22_1 = t_32_top
+        cell22_2 = t_32_mid
+        cell22_3 = t_32_down
+    elif b[2][2] == 64:
+        cell22_1 = t_64_top
+        cell22_2 = t_64_mid
+        cell22_3 = t_64_down
+    elif b[2][2] == 128:
+        cell22_1 = t_128_top
+        cell22_2 = t_128_mid
+        cell22_3 = t_128_down
+    elif b[2][2] == 256:
+        cell22_1 = t_256_top
+        cell22_2 = t_256_mid
+        cell22_3 = t_256_down
+    elif b[2][2] == 512:
+        cell22_1 = t_512_top
+        cell22_2 = t_512_mid
+        cell22_3 = t_512_down
+    elif b[2][2] == 1024:
+        cell22_1 = t_1024_top
+        cell22_2 = t_1024_mid
+        cell22_3 = t_1024_down
+    elif b[2][2] == 2048:
+        cell22_1 = t_2048_top
+        cell22_2 = t_2048_mid
+        cell22_3 = t_2048_down
+    else:
+        cell22_1 = space
+        cell22_2 = space
+        cell22_3 = space
+
+    if b[2][3] == 2:
+        cell23_1 = t_2_top
+        cell23_2 = t_2_mid
+        cell23_3 = t_2_down
+    elif b[2][3] == 4:
+        cell23_1 = t_4_top
+        cell23_2 = t_4_mid
+        cell23_3 = t_4_down
+    elif b[2][3] == 8:
+        cell23_1 = t_8_top
+        cell23_2 = t_8_mid
+        cell23_3 = t_8_down
+    elif b[2][3] == 16:
+        cell23_1 = t_16_top
+        cell23_2 = t_16_mid
+        cell23_3 = t_16_down
+    elif b[2][3] == 32:
+        cell23_1 = t_32_top
+        cell23_2 = t_32_mid
+        cell23_3 = t_32_down
+    elif b[2][3] == 64:
+        cell23_1 = t_64_top
+        cell23_2 = t_64_mid
+        cell23_3 = t_64_down
+    elif b[2][3] == 128:
+        cell23_1 = t_128_top
+        cell23_2 = t_128_mid
+        cell23_3 = t_128_down
+    elif b[2][3] == 256:
+        cell23_1 = t_256_top
+        cell23_2 = t_256_mid
+        cell23_3 = t_256_down
+    elif b[2][3] == 512:
+        cell23_1 = t_512_top
+        cell23_2 = t_512_mid
+        cell23_3 = t_512_down
+    elif b[2][3] == 1024:
+        cell23_1 = t_1024_top
+        cell23_2 = t_1024_mid
+        cell23_3 = t_1024_down
+    elif b[2][3] == 2048:
+        cell23_1 = t_2048_top
+        cell23_2 = t_2048_mid
+        cell23_3 = t_2048_down
+    else:
+        cell23_1 = space
+        cell23_2 = space
+        cell23_3 = space
+
+    if b[3][0] == 2:
+        cell30_1 = t_2_top
+        cell30_2 = t_2_mid
+        cell30_3 = t_2_down
+    elif b[3][0] == 4:
+        cell30_1 = t_4_top
+        cell30_2 = t_4_mid
+        cell30_3 = t_4_down
+    elif b[3][0] == 8:
+        cell30_1 = t_8_top
+        cell30_2 = t_8_mid
+        cell30_3 = t_8_down
+    elif b[3][0] == 16:
+        cell30_1 = t_16_top
+        cell30_2 = t_16_mid
+        cell30_3 = t_16_down
+    elif b[3][0] == 32:
+        cell30_1 = t_32_top
+        cell30_2 = t_32_mid
+        cell30_3 = t_32_down
+    elif b[3][0] == 64:
+        cell30_1 = t_64_top
+        cell30_2 = t_64_mid
+        cell30_3 = t_64_down
+    elif b[3][0] == 128:
+        cell30_1 = t_128_top
+        cell30_2 = t_128_mid
+        cell30_3 = t_128_down
+    elif b[3][0] == 256:
+        cell30_1 = t_256_top
+        cell30_2 = t_256_mid
+        cell30_3 = t_256_down
+    elif b[3][0] == 512:
+        cell30_1 = t_512_top
+        cell30_2 = t_512_mid
+        cell30_3 = t_512_down
+    elif b[3][0] == 1024:
+        cell30_1 = t_1024_top
+        cell30_2 = t_1024_mid
+        cell30_3 = t_1024_down
+    elif b[3][0] == 2048:
+        cell30_1 = t_2048_top
+        cell30_2 = t_2048_mid
+        cell30_3 = t_2048_down
+    else:
+        cell30_1 = space
+        cell30_2 = space
+        cell30_3 = space
+
+    if b[3][1] == 2:
+        cell31_1 = t_2_top
+        cell31_2 = t_2_mid
+        cell31_3 = t_2_down
+    elif b[3][1] == 4:
+        cell31_1 = t_4_top
+        cell31_2 = t_4_mid
+        cell31_3 = t_4_down
+    elif b[3][1] == 8:
+        cell31_1 = t_8_top
+        cell31_2 = t_8_mid
+        cell31_3 = t_8_down
+    elif b[3][1] == 16:
+        cell31_1 = t_16_top
+        cell31_2 = t_16_mid
+        cell31_3 = t_16_down
+    elif b[3][1] == 32:
+        cell31_1 = t_32_top
+        cell31_2 = t_32_mid
+        cell31_3 = t_32_down
+    elif b[3][1] == 64:
+        cell31_1 = t_64_top
+        cell31_2 = t_64_mid
+        cell31_3 = t_64_down
+    elif b[3][1] == 128:
+        cell31_1 = t_128_top
+        cell31_2 = t_128_mid
+        cell31_3 = t_128_down
+    elif b[3][1] == 256:
+        cell31_1 = t_256_top
+        cell31_2 = t_256_mid
+        cell31_3 = t_256_down
+    elif b[3][1] == 512:
+        cell31_1 = t_512_top
+        cell31_2 = t_512_mid
+        cell31_3 = t_512_down
+    elif b[3][1] == 1024:
+        cell31_1 = t_1024_top
+        cell31_2 = t_1024_mid
+        cell31_3 = t_1024_down
+    elif b[3][1] == 2048:
+        cell31_1 = t_2048_top
+        cell31_2 = t_2048_mid
+        cell31_3 = t_2048_down
+    else:
+        cell31_1 = space
+        cell31_2 = space
+        cell31_3 = space
+
+    if b[3][2] == 2:
+        cell32_1 = t_2_top
+        cell32_2 = t_2_mid
+        cell32_3 = t_2_down
+    elif b[3][2] == 4:
+        cell32_1 = t_4_top
+        cell32_2 = t_4_mid
+        cell32_3 = t_4_down
+    elif b[3][2] == 8:
+        cell32_1 = t_8_top
+        cell32_2 = t_8_mid
+        cell32_3 = t_8_down
+    elif b[3][2] == 16:
+        cell32_1 = t_16_top
+        cell32_2 = t_16_mid
+        cell32_3 = t_16_down
+    elif b[3][2] == 32:
+        cell32_1 = t_32_top
+        cell32_2 = t_32_mid
+        cell32_3 = t_32_down
+    elif b[3][2] == 64:
+        cell32_1 = t_64_top
+        cell32_2 = t_64_mid
+        cell32_3 = t_64_down
+    elif b[3][2] == 128:
+        cell32_1 = t_128_top
+        cell32_2 = t_128_mid
+        cell32_3 = t_128_down
+    elif b[3][2] == 256:
+        cell32_1 = t_256_top
+        cell32_2 = t_256_mid
+        cell32_3 = t_256_down
+    elif b[3][2] == 512:
+        cell32_1 = t_512_top
+        cell32_2 = t_512_mid
+        cell32_3 = t_512_down
+    elif b[3][2] == 1024:
+        cell32_1 = t_1024_top
+        cell32_2 = t_1024_mid
+        cell32_3 = t_1024_down
+    elif b[3][2] == 2048:
+        cell32_1 = t_2048_top
+        cell32_2 = t_2048_mid
+        cell32_3 = t_2048_down
+    else:
+        cell32_1 = space
+        cell32_2 = space
+        cell32_3 = space
+
+    if b[3][3] == 2:
+        cell33_1 = t_2_top
+        cell33_2 = t_2_mid
+        cell33_3 = t_2_down
+    elif b[3][3] == 4:
+        cell33_1 = t_4_top
+        cell33_2 = t_4_mid
+        cell33_3 = t_4_down
+    elif b[3][3] == 8:
+        cell33_1 = t_8_top
+        cell33_2 = t_8_mid
+        cell33_3 = t_8_down
+    elif b[3][3] == 16:
+        cell33_1 = t_16_top
+        cell33_2 = t_16_mid
+        cell33_3 = t_16_down
+    elif b[3][3] == 32:
+        cell33_1 = t_32_top
+        cell33_2 = t_32_mid
+        cell33_3 = t_32_down
+    elif b[3][3] == 64:
+        cell33_1 = t_64_top
+        cell33_2 = t_64_mid
+        cell33_3 = t_64_down
+    elif b[3][3] == 128:
+        cell33_1 = t_128_top
+        cell33_2 = t_128_mid
+        cell33_3 = t_128_down
+    elif b[3][3] == 256:
+        cell33_1 = t_256_top
+        cell33_2 = t_256_mid
+        cell33_3 = t_256_down
+    elif b[3][3] == 512:
+        cell33_1 = t_512_top
+        cell33_2 = t_512_mid
+        cell33_3 = t_512_down
+    elif b[3][3] == 1024:
+        cell33_1 = t_1024_top
+        cell33_2 = t_1024_mid
+        cell33_3 = t_1024_down
+    elif b[3][3] == 2048:
+        cell33_1 = t_2048_top
+        cell33_2 = t_2048_mid
+        cell3_3 = t_2048_down
+    else:
+        cell33_1 = space
+        cell33_2 = space
+        cell33_3 = space
+
+    print('\u250f', '\u2501' * 8, '\u2533', '\u2501' * 8, '\u2533', '\u2501' * 8, '\u2533', '\u2501' * 8, '\u2513')
+    print('\u2503', cell00_1, '\u2503', cell01_1, '\u2503', cell02_1, '\u2503', cell03_1, '\u2503')
+    print('\u2503', cell00_2, '\u2503', cell01_2, '\u2503', cell02_2, '\u2503', cell03_2, '\u2503')
+    print('\u2503', cell00_3, '\u2503', cell01_3, '\u2503', cell02_3, '\u2503', cell03_3, '\u2503')
+    print('\u2523', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u252b')
+    print('\u2503', cell10_1, '\u2503', cell11_1, '\u2503', cell12_1, '\u2503', cell13_1, '\u2503')
+    print('\u2503', cell10_2, '\u2503', cell11_2, '\u2503', cell12_2, '\u2503', cell13_2, '\u2503')
+    print('\u2503', cell10_3, '\u2503', cell11_3, '\u2503', cell12_3, '\u2503', cell13_3, '\u2503')
+    print('\u2523', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u252b')
+    print('\u2503', cell20_1, '\u2503', cell21_1, '\u2503', cell22_1, '\u2503', cell23_1, '\u2503')
+    print('\u2503', cell20_2, '\u2503', cell21_2, '\u2503', cell22_2, '\u2503', cell23_2, '\u2503')
+    print('\u2503', cell20_3, '\u2503', cell21_3, '\u2503', cell22_3, '\u2503', cell23_3, '\u2503')
+    print('\u2523', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u254b', '\u2501' * 8, '\u252b')
+    print('\u2503', cell30_1, '\u2503', cell31_1, '\u2503', cell32_1, '\u2503', cell33_1, '\u2503')
+    print('\u2503', cell30_2, '\u2503', cell31_2, '\u2503', cell32_2, '\u2503', cell33_2, '\u2503')
+    print('\u2503', cell30_3, '\u2503', cell31_3, '\u2503', cell32_3, '\u2503', cell33_3, '\u2503')
+    print('\u2517', '\u2501' * 8, '\u253b', '\u2501' * 8, '\u253b', '\u2501' * 8, '\u253b', '\u2501' * 8, '\u251b')
+
+os.system('clear')
+logo()
+newgame = input('Would you like to start a new game? Y/N  ')
+while True:
+    b = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    if newgame == 'Y' or newgame == 'y':
+        while b[0].count(FINAL_POINT) + b[1].count(FINAL_POINT) + b[2].count(FINAL_POINT) + b[3].count(FINAL_POINT) < 1:
+            os.system('clear')
+            setNewCell()
+            logo()
+            table()
+            press = input('Press W-A-S-D to move:  ')
+            '''if press != "a" or press != 'A' or press != 's' or press != 'S' or press != 'd' or press != 'D' or press != 'w' or press != 'W':
+                print('Give the right input please. W-A-S-D   ')'''
+            if press == 'a' or press == 'A':
+                moveLeft()
+            if press == 's' or press == 'S':
+                moveDown()
+            if press == 'd' or press == 'D':
+                moveRight()
+            if press == 'w' or press == 'W':
+                moveUp()
+            os.system('clear')
+            logo()
+            table()
+            c = b[0].count(0) + b[1].count(0) + b[2].count(0) + b[3].count(0)
+            if c == 0:
+                move=0
+                for i in range(0,4):
+                    for j in range(0,4):
+                        try:
+                            if b[i][j] == b[i-1][j] or b[i][j] == b[i+1][j] or b[i][j] == b[i][j-1] or b[i][j] == b[i][j+1]:
+                                move += 1
+                        except IndexError:
+                            pass
+                if move == 0:
+                    break
+        if b[0].count(FINAL_POINT) + b[1].count(FINAL_POINT) + b[2].count(FINAL_POINT) + b[3].count(FINAL_POINT) > 0:
+            print('Congratulations! You won.')
+        else:
+            print('You lost.')            
+    newgame = input('Would you like to start a new game? Y/N ')
+    if newgame == "Y" or newgame == "y":
+        continue
+    else:
+        os.system('clear')
+        break
