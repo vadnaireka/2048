@@ -1,0 +1,185 @@
+b = [[2, 0, 0, 2],[0, 4, 0, 2],[0, 0, 0, 2],[2, 0, 0, 2]]
+
+import random
+import os
+
+FINAL_POINT = 2048
+
+def start_game():
+    print(" .d888b.  .d88b.    j88D  .d888b. ")
+    print(" VP  `8D .8P  88.  j8~88  88   8D ")
+    print("    odD' 88  d'88 j8' 88  `VoooY' ")
+    print("  .88'   88 d' 88 V88888D .d~~~b. ")
+    print(" j88.    `88  d8'     88  88   8D ")
+    print(" 888888D  `Y88P'      VP  `Y888P' ")
+                                 
+    start = input("Press S to start")
+    if start == S or start == s:
+        os.system('cls')
+                                 
+
+def easy_ending():
+    for i in range(len(b)):
+        for j in range(len(b)):
+            if b[i][j] == FINAL_POINT:
+                print("Congrats! You won this round. ")
+                break
+
+def boardIsFull():
+    c = b[0].count(0) + b[1].count(0) + b[2].count(0) + b[3].count(0)
+    if c > 0:
+        print(c)
+    move=0
+    for i in range(0,4):
+        for j in range(0,4):
+            try:
+                if b[i][j] == b[i-1][j] or b[i][j] == b[i+1][j] or b[i][j] == b[i][j-1] or b[i][j] == b[i][j+1]:
+                    move += 1
+            except IndexError:
+                pass
+    if move == 0:
+        print('You lost!')
+    if move !=0:
+        print(move)
+
+def setNewCell():
+    x = True
+    while x:
+        new = [2,4,2,2]
+        i = random.randint(0,3)
+        j = random.randint(0,3)
+        if b[i][j] == 0:
+            b[i][j] = random.choice(new)
+            x = False
+
+
+        
+def moveDown():
+    for j in range(0,4):
+        for i in range(3, -1, -1):
+            if b[i][j] == 0:
+                if i-1 >= 0:
+                    b[i][j] = b[i - 1][j]
+                if i-2 >= 0:           
+                    b[i-1][j] = b[i-2][j]
+                if i-3 >= 0:    
+                    b[i-2][j] = b[i-3][j]
+                    b[i-3][j] = 0
+            elif i-1 >= 0:
+                if b[i][j] == b[i-1][j]:    
+                    b[i][j] = b[i][j] + b[i - 1][j]
+                    if i-2 >= 0:
+                        b[i - 1][j] = b[i - 2][j]
+                    if i - 3 >= 0:
+                        b[i - 2][j] = b[i - 3][j]
+                        b[i - 3][j] = 0                       
+                       
+def moveUp():                   
+    for j in range(0,4):
+        for i in range(0, 4):
+            try:
+                if b[i][j] == 0:
+                    b[i][j] = b[i+1][j]           
+                    b[i+1][j] = b[i+2][j]
+                    b[i+2][j] = b[i+3][j]
+                    b[i + 3][j] = 0
+                if b[i][j] == 0:
+                    b[i][j] = b[i+1][j]           
+                    b[i+1][j] = b[i+2][j]
+                    b[i+2][j] = b[i+3][j]
+                    b[i + 3][j] = 0
+                if b[i][j] == 0:
+                    b[i][j] = b[i+1][j]           
+                    b[i+1][j] = b[i+2][j]
+                    b[i+2][j] = b[i+3][j]
+                    b[i + 3][j] = 0
+                if b[i][j] == 0:
+                    b[i][j] = b[i+1][j]           
+                    b[i+1][j] = b[i+2][j]
+                    b[i+2][j] = b[i+3][j]
+                    b[i+3][j] = 0
+                if b[i][j] == b[i+1][j]:
+                    b[i][j] = b[i][j] + b[i+1][j]
+                    b[i+1][j] = b[i+2][j]
+                    b[i+2][j] = b[i+3][j]
+                    b[i + 3][j] = 0
+            except:
+                continue
+                
+def moveLeft():
+    for i in range(0,4):
+        for j in range(0, 4):
+            try:
+                if b[i][j] == 0:
+                    b[i][j] = b[i][j+1]           
+                    b[i][j+1] = b[i][j+2]
+                    b[i][j+2] = b[i][j+3]
+                    b[i][j+3] = 0
+                elif b[i][j] == b[i][j+1]:
+                    b[i][j] = b[i][j] + b[i][j+1]
+                    b[i][j+1] = b[i][j+2]
+                    b[i][j+2] = b[i][j+3]
+                    b[i][j+3] = 0
+            except:
+                continue    
+
+def moveRight():
+    for i in range(0, 4):
+        for j in range(3, -1, -1):
+            if b[i][j] == 0:
+                if j-1 >= 0:
+                    b[i][j] = b[i][j-1]
+                if j-2 >= 0:           
+                    b[i][j+1] = b[i][j-2]
+                if j-3 >= 0:    
+                    b[i][j-2] = b[i][j-3]
+                    b[i][j-3] = 0
+            elif j-1 >= 0:
+                if b[i][j] == b[i][j-1]:    
+                    b[i][j] = b[i][j] + b[i][j-1]
+                    if j-2 >= 0:
+                        b[i][j-1] = b[i][j-2]
+                    if j-3 >= 0:
+                        b[i][j-2] = b[i][j-3]
+                        b[i][j-3] = 0
+start_game()
+print(b[0])
+print(b[1])
+print(b[2])
+print(b[3])
+print("\n")
+
+setNewCell()
+
+print(b[0])
+print(b[1])
+print(b[2])
+print(b[3])
+
+#easyEnding()
+#
+#
+#press = input('asdw:')
+#if press == 'a':
+#    moveLeft()
+#if press == 's':
+#    moveDown()
+#if press == 'd':
+#    moveRight()
+#if press == 'w':
+#    moveUp()     
+#
+#print(b[0])
+#print(b[1])
+#print(b[2])
+#print(b[3])
+
+#while max(b)<FINAL_POINT:
+#    #run the game
+#    if move ==0:
+#        break
+#
+#if max(b)== FINAL_POINT:
+#    print("win")
+#else:
+#    print("lost")
